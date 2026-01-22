@@ -17,12 +17,27 @@ module.exports = {
 					ChannelType.GuildStageVoice,
 				)
 				.setRequired(false),
+		)
+		.addBooleanOption((option) =>
+			option
+				.setName("stay")
+				.setDescription(
+					"Stay in voice channel after playing (default: stay)",
+				)
+				.setRequired(false),
 		),
+
+	/**
+	 *
+	 * @param {ChatInputCommandInteraction} interaction
+	 * @returns
+	 */
 
 	async execute(interaction) {
 		await interaction.deferReply({ ephemeral: true });
 
 		const soundNames = getSoundNames();
+		const stay = interaction.options.getBoolean("stay") ?? true;
 		const specifiedChannel = interaction.options.getChannel("channel");
 
 		if (soundNames.length === 0) {
@@ -59,7 +74,7 @@ module.exports = {
 			soundNames[Math.floor(Math.random() * soundNames.length)];
 
 		// Play the sound
-		const result = await playSound(voiceChannel, randomName, true);
+		const result = await playSound(voiceChannel, randomName, !stay);
 
 		if (result.success) {
 			return interaction.editReply({
