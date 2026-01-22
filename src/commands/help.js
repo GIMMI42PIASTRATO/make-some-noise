@@ -38,7 +38,7 @@ module.exports = {
 						"• Sound names are case-insensitive",
 						"• Supported formats: mp3, wav, ogg, webm, m4a",
 						"• Max file size: 8MB",
-						"• You must be in a voice channel to play sounds",
+						"• You must be in a voice channe or specify a channel to play sounds",
 					].join("\n"),
 				},
 			)
