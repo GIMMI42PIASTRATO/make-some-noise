@@ -1,7 +1,8 @@
-const { SlashCommandBuilder, EmbedBuilder } = require("discord.js");
-const { getSoundNames, getSound } = require("../utils/soundManager");
+import { EmbedBuilder, MessageFlags, SlashCommandBuilder } from "discord.js";
+import type { CommandModule } from "../types";
+import { getSound, searchSoundNames } from "../utils/soundManager";
 
-module.exports = {
+const command: CommandModule = {
 	data: new SlashCommandBuilder()
 		.setName("info")
 		.setDescription("Get information about a specific sound")
@@ -15,50 +16,46 @@ module.exports = {
 
 	async autocomplete(interaction) {
 		const focusedValue = interaction.options.getFocused().toLowerCase();
-		const soundNames = getSoundNames();
-
-		const filtered = soundNames
-			.filter((name) => name.includes(focusedValue))
-			.slice(0, 25);
+		const filtered = searchSoundNames(focusedValue);
 
 		await interaction.respond(
-			filtered.map((name) => ({ name: name, value: name })),
+			filtered.map((name) => ({ name, value: name })),
 		);
 	},
 
 	async execute(interaction) {
-		const name = interaction.options.getString("name");
+		const name = interaction.options.getString("name", true);
 		const sound = getSound(name);
 
 		if (!sound) {
 			return interaction.reply({
-				content: `❌ Sound **${name}** not found!`,
-				ephemeral: true,
+				content: `Sound **${name}** not found.`,
+				flags: MessageFlags.Ephemeral,
 			});
 		}
 
-		// Try to get user who added the sound
-		let addedByUser = "Unknown";
+		let addedByUser = `User ID: ${sound.addedBy}`;
+
 		try {
 			const user = await interaction.client.users.fetch(sound.addedBy);
 			addedByUser = user.tag;
-		} catch (e) {
-			addedByUser = `User ID: ${sound.addedBy}`;
+		} catch (error) {
+			console.error("Failed to fetch user for sound info:", error);
 		}
 
 		const embed = new EmbedBuilder()
-			.setTitle(`🔊 ${sound.name}`)
+			.setTitle(sound.name)
 			.setColor(0x5865f2)
 			.addFields(
-				{ name: "📁 Filename", value: sound.filename, inline: true },
-				{ name: "👤 Added By", value: addedByUser, inline: true },
+				{ name: "Filename", value: sound.filename, inline: true },
+				{ name: "Added By", value: addedByUser, inline: true },
 				{
-					name: "🔊 Play Count",
-					value: `${sound.playCount || 0}`,
+					name: "Play Count",
+					value: `${sound.playCount ?? 0}`,
 					inline: true,
 				},
 				{
-					name: "📅 Added On",
+					name: "Added On",
 					value: new Date(sound.addedAt).toLocaleDateString(),
 					inline: true,
 				},
@@ -67,7 +64,9 @@ module.exports = {
 
 		return interaction.reply({
 			embeds: [embed],
-			ephemeral: true,
+			flags: MessageFlags.Ephemeral,
 		});
 	},
 };
+
+export = command;

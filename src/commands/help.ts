@@ -1,30 +1,31 @@
-const { SlashCommandBuilder, EmbedBuilder } = require("discord.js");
+import { EmbedBuilder, MessageFlags, SlashCommandBuilder } from "discord.js";
+import type { CommandModule } from "../types";
 
-module.exports = {
+const command: CommandModule = {
 	data: new SlashCommandBuilder()
 		.setName("help")
 		.setDescription("Show all available soundboard commands"),
 
 	async execute(interaction) {
 		const embed = new EmbedBuilder()
-			.setTitle("🎵 Make Some Noise - Commands")
+			.setTitle("Make Some Noise - Commands")
 			.setColor(0x5865f2)
 			.setDescription(
-				"Your Discord soundboard bot! Here are all available commands:",
+				"Your Discord soundboard bot. Here are all available commands:",
 			)
 			.addFields(
 				{
-					name: "🔊 Playback Commands",
+					name: "Playback Commands",
 					value: [
-						"`/play <name>` - Play a sound (leaves after)",
+						"`/play <name>` - Play a sound",
 						"`/play <name> stay:true` - Play and stay in channel",
-						"`/ninja <name>` - Quick play and vanish!",
+						"`/ninja <name>` - Quick play and vanish",
 						"`/random` - Play a random sound",
 						"`/stop` - Stop playback and leave",
 					].join("\n"),
 				},
 				{
-					name: "📝 Management Commands",
+					name: "Management Commands",
 					value: [
 						"`/add <name> <audio>` - Add a new sound",
 						"`/remove <name>` - Remove a sound",
@@ -33,21 +34,23 @@ module.exports = {
 					].join("\n"),
 				},
 				{
-					name: "💡 Tips",
+					name: "Tips",
 					value: [
-						"• Sound names are case-insensitive",
-						"• Supported formats: mp3, wav, ogg, webm, m4a",
-						"• Max file size: 8MB",
-						"• You must be in a voice channe or specify a channel to play sounds",
+						"Sound names are case-insensitive",
+						"Supported formats: mp3, wav, ogg, webm, m4a",
+						"Maximum file size: 8MB",
+						"You must be in a voice channel, or specify one, to play sounds",
 					].join("\n"),
 				},
 			)
-			.setFooter({ text: "Make Some Noise! 🔊" })
+			.setFooter({ text: "Make Some Noise" })
 			.setTimestamp();
 
 		return interaction.reply({
 			embeds: [embed],
-			ephemeral: true,
+			flags: MessageFlags.Ephemeral,
 		});
 	},
 };
+
+export = command;

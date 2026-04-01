@@ -15,7 +15,7 @@ A Discord bot that lets you play custom sounds in voice channels. Perfect for re
 
 ### Prerequisites
 
-- Node.js 18 or higher
+- Node.js 22.12.0 or higher
 - A Discord bot token
 - FFmpeg (optional, but recommended for better audio support)
 
@@ -25,7 +25,7 @@ A Discord bot that lets you play custom sounds in voice channels. Perfect for re
 
 2. **Install dependencies:**
    ```bash
-   npm install
+   pnpm install
    ```
 
 3. **Create environment file:**
@@ -70,7 +70,7 @@ https://discord.com/api/oauth2/authorize?client_id=YOUR_CLIENT_ID&permissions=31
 Deploy slash commands to Discord:
 
 ```bash
-npm run deploy
+pnpm run deploy
 ```
 
 > Note: Global commands take up to 1 hour to propagate. Use `GUILD_ID` for instant updates during development.
@@ -78,11 +78,14 @@ npm run deploy
 ### Start the Bot
 
 ```bash
-# Production
-npm start
+# Type-check build
+pnpm run build
+
+# Run the bot
+pnpm start
 
 # Development (with auto-restart)
-npm run dev
+pnpm run dev
 ```
 
 ## Commands
@@ -114,24 +117,27 @@ Maximum file size: **8MB**
 ```
 make-some-noise/
 ├── src/
-│   ├── index.js              # Main bot file
-│   ├── deploy-commands.js    # Command deployment script
+│   ├── index.ts              # Main bot file
+│   ├── deploy-commands.ts    # Command deployment script
+│   ├── types.ts              # Shared TypeScript types
 │   ├── commands/             # Slash commands
-│   │   ├── add.js
-│   │   ├── remove.js
-│   │   ├── play.js
-│   │   ├── ninja.js
-│   │   ├── random.js
-│   │   ├── list.js
-│   │   ├── info.js
-│   │   ├── stop.js
-│   │   └── help.js
+│   │   ├── add.ts
+│   │   ├── remove.ts
+│   │   ├── play.ts
+│   │   ├── ninja.ts
+│   │   ├── random.ts
+│   │   ├── list.ts
+│   │   ├── info.ts
+│   │   ├── stop.ts
+│   │   └── help.ts
 │   └── utils/
-│       ├── soundManager.js   # Sound file management
-│       └── audioPlayer.js    # Voice channel audio playback
+│       ├── soundManager.ts   # Sound file management
+│       ├── audioPlayer.ts    # Voice channel audio playback
+│       └── discord.ts        # Discord helper utilities
 ├── sounds/                   # Audio files storage
 │   └── sounds.json           # Sound metadata database
 ├── package.json
+├── tsconfig.json
 ├── .env.example
 └── README.md
 ```
@@ -149,8 +155,8 @@ make-some-noise/
 - Verify the audio file exists in the sounds folder
 
 ### "Cannot find module" errors
-- Run `npm install` to install all dependencies
-- Make sure you're using Node.js 18 or higher
+- Run `pnpm install` to install all dependencies
+- Make sure you're using Node.js 22.12.0 or higher
 
 ## License
 
