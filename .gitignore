@@ -1,7 +1,11 @@
 node_modules/
+dist/
+*.tsbuildinfo
 .env
 sounds/*.mp3
 sounds/*.wav
 sounds/*.ogg
+sounds/*.webm
+sounds/*.m4a
 !sounds/.gitkeep
-sounds.json
+sounds/sounds.json
