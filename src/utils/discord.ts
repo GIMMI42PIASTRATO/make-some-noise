@@ -33,12 +33,12 @@ export async function getInteractionMember(
 export async function getTargetVoiceChannel(
 	interaction: ChatInputCommandInteraction,
 ): Promise<VoiceBasedChannel | null> {
-	const selectedChannel = interaction.options.getChannel("channel", false);
+	const selectedChannel = interaction.options.getChannel("channel", false, [
+		ChannelType.GuildVoice,
+		ChannelType.GuildStageVoice,
+	]);
 
-	if (
-		selectedChannel?.isVoiceBased() &&
-		SUPPORTED_VOICE_CHANNEL_TYPES.has(selectedChannel.type)
-	) {
+	if (selectedChannel && SUPPORTED_VOICE_CHANNEL_TYPES.has(selectedChannel.type)) {
 		return selectedChannel;
 	}
 

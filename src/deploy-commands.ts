@@ -4,17 +4,19 @@ import path from "node:path";
 import { REST, Routes } from "discord.js";
 import type { CommandModule } from "./types";
 
-const token = process.env.DISCORD_TOKEN;
-const clientId = process.env.CLIENT_ID;
+function getRequiredEnv(name: string): string {
+	const value = process.env[name];
+
+	if (!value) {
+		throw new Error(`${name} is required.`);
+	}
+
+	return value;
+}
+
+const token = getRequiredEnv("DISCORD_TOKEN");
+const clientId = getRequiredEnv("CLIENT_ID");
 const guildId = process.env.GUILD_ID;
-
-if (!token) {
-	throw new Error("DISCORD_TOKEN is required.");
-}
-
-if (!clientId) {
-	throw new Error("CLIENT_ID is required.");
-}
 
 const commandsPath = path.join(__dirname, "commands");
 const runtimeExtension = path.extname(__filename);
